@@ -35,7 +35,7 @@ asr_model = nemo_asr.models.ASRModel.from_pretrained("stt_en_fastconformer_trans
 
 def transcribe():
     to_mono_16k(path, mono_16_path)
-    transcription = asr_model.transcribe([mono_16_path])
+    transcription = asr_model.transcribe([mono_16_path])[0].text
 
     print("Transcrition:")
     print(transcription)
