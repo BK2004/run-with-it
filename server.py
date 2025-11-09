@@ -56,6 +56,7 @@ def retrieve_metrics():
 def run_agent():
 	global running_state
 	global mode_txt
+	text_to_speech("Run started")
 	while True:
 		goal = classify(mode_txt)
 		if goal == 'Stop':
@@ -68,6 +69,7 @@ def run_agent():
 				"description": "Something light",
 				"distance": random.randint(10, 23),
 			})
+			text_to_speech("Run over")
 			running_state = None
 			return
 			
@@ -124,6 +126,7 @@ async def read_data(request: Request):
 	global last_button_state
 	global data
 	global mode_txt
+	global running_state
 	body = await request.body()
 	decoded = body.decode()
 	reader = csv.reader(io.StringIO(decoded))
@@ -133,10 +136,11 @@ async def read_data(request: Request):
 			"ay": float(row[1]),
 			"az": float(row[2]),
 			"temperature": float(row[3]),
-			"button_pressed": int(row[4]),
+			"button_pressed": int(row[5]),
 		})
-		button_state = data[-1]['button_pressed'] == 0
+		button_state = data[-1]['button_pressed'] ==0
 		if last_button_state != button_state:
+			last_button_state = not last_button_state
 			if button_state == True:
 				await record.start_recording(True)
 			else:

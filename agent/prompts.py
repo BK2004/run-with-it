@@ -30,7 +30,7 @@ You can do the following tasks:
 - get_metrics - Get the runner's latest metrics since last reading. This shouldn't be done too frequently.
 				When older readings show that the user is approaching atypical values for their goal, you should be more prepared
 				to examine metrics.
-- send_feedback - Send the runner a 1-2 sentence message. This should be used very sparingly, you cannot send feedback within 20s of last feedback message.
+- send_feedback - Send the runner a 1-2 sentence message. This should be used very sparingly, you cannot send feedback within 10s of last feedback message.
 
 Return a JSON containing a subset of these choices. Use at most 1 of each task, and include a message for send_feedback.
 '''
