@@ -1,22 +1,38 @@
-import torch, torchaudio
-from torchaudio.functional import resample
+import soundfile as sf
+import numpy as np
+from scipy.signal import resample_poly
+from pathlib import Path
+import os
 
-path = "output.wav"
-wave, sr = torchaudio.load(path)          # shape: (channels, time)
+path = "file_example_WAV_1MG.wav"
+mono_16_path = "test.wav"
 
-# downmix to mono
-if wave.size(0) > 1:
-    wave = wave.mean(dim=0, keepdim=True) # (1, time)
+def to_mono_16k(in_path, out_path, target_sr=16000, dtype="int16"):
+    # Read (always_2d=True gives shape [samples, channels])
+    y, sr = sf.read(in_path, always_2d=True)
+    # Downmix to mono
+    y = y.mean(axis=1)
+    # Resample if needed (poly resampling preserves quality)
+    if sr != target_sr:
+        # Up/down factors for resample_poly
+        from math import gcd
+        g = gcd(sr, target_sr)
+        up, down = target_sr // g, sr // g
+        y = resample_poly(y, up, down)
+    # Normalize/clamp and convert dtype
+    if dtype == "int16":
+        y = np.clip(y, -1.0, 1.0)
+        y = (y * 32767.0).astype(np.int16)
+        subtype = "PCM_16"
+    else:
+        y = y.astype(np.float32)
+        subtype = "FLOAT"
 
-# resample to 16 kHz if needed
-target_sr = 16000
-if sr != target_sr:
-    wave = resample(wave, sr, target_sr)
-    sr = target_sr
+    sf.write(out_path, y, target_sr, subtype=subtype)
 
-# write back as WAV for NeMo to read
-torchaudio.save("audio_mono16k.wav", wave, sr)
+# Example: single file
+to_mono_16k(path, mono_16_path)
 
 import nemo.collections.asr as nemo_asr
 asr_model = nemo_asr.models.ASRModel.from_pretrained("stt_en_fastconformer_transducer_large")
-print(asr_model.transcribe(["audio_mono16k.wav"]))
+print(asr_model.transcribe([mono_16_path]))
