@@ -30,16 +30,15 @@ def to_mono_16k(in_path, out_path, target_sr=16000, dtype="int16"):
 
     sf.write(out_path, y, target_sr, subtype=subtype)
 
-# Example: single file
-to_mono_16k(path, mono_16_path)
-
 import nemo.collections.asr as nemo_asr
 asr_model = nemo_asr.models.ASRModel.from_pretrained("stt_en_fastconformer_transducer_large")
 
 def transcribe():
+    to_mono_16k(path, mono_16_path)
     transcription = asr_model.transcribe([mono_16_path])
+
     print("Transcrition:")
     print(transcription)
-    return transcription
 
-os.remove(mono_16_path)
+    os.remove(mono_16_path)
+    return transcription
