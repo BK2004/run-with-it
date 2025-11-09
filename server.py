@@ -4,6 +4,7 @@ from fastapi.responses import Response
 from edge.tts import text_to_speech
 from pydantic import BaseModel
 import edge.record as record
+import edge.ASR as asr
 
 app = FastAPI()
 
@@ -23,4 +24,5 @@ async def read_press():
 @app.get("/release", response_class=Response)
 async def read_stop():
 	record.stop_recording()
+	asr_output = asr.transcribe()
 	return Response(content="Success", media_type="text/plain")
