@@ -36,3 +36,5 @@ to_mono_16k(path, mono_16_path)
 import nemo.collections.asr as nemo_asr
 asr_model = nemo_asr.models.ASRModel.from_pretrained("stt_en_fastconformer_transducer_large")
 print(asr_model.transcribe([mono_16_path]))
+
+os.remove(mono_16_path)
