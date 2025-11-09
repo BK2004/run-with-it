@@ -25,6 +25,13 @@ record = False
 async def start_recording(INPT):
     global frames
     frames = []
+    p = pyaudio.PyAudio()
+    global stream
+    stream = p.open(format=FORMAT,
+                channels=CHANNELS,
+                rate=RATE,
+                input=True,
+                frames_per_buffer=CHUNK)
     global record
     record = INPT
     threading.Thread(target=update).start()
