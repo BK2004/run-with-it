@@ -14,6 +14,11 @@ import threading
 import json
 from agent import strava_api
 import random
+from pydub import AudioSegment
+from pydub.playback import play
+
+beep = AudioSegment.from_file("beep-06.wav")
+
 
 app = FastAPI()
 
@@ -88,6 +93,7 @@ async def read_mode(mode: Mode):
 
 @app.get("/press", response_class=Response)
 async def read_press():
+	play(beep)
 	await record.start_recording(True)
 	return Response(content="Success", media_type="text/plain")
 
