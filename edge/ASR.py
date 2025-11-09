@@ -4,7 +4,7 @@ from scipy.signal import resample_poly
 from pathlib import Path
 import os
 
-path = "file_example_WAV_1MG.wav"
+path = "output.wav"
 mono_16_path = "test.wav"
 
 def to_mono_16k(in_path, out_path, target_sr=16000, dtype="int16"):
@@ -35,6 +35,11 @@ to_mono_16k(path, mono_16_path)
 
 import nemo.collections.asr as nemo_asr
 asr_model = nemo_asr.models.ASRModel.from_pretrained("stt_en_fastconformer_transducer_large")
-print(asr_model.transcribe([mono_16_path]))
+
+def transcribe():
+    transcription = asr_model.transcribe([mono_16_path])
+    print("Transcrition:")
+    print(transcription)
+    return transcription
 
 os.remove(mono_16_path)
