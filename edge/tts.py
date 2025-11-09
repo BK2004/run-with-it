@@ -21,4 +21,3 @@ def text_to_speech(text: str) -> list[int] | None:
 		os.remove(TMP) if os.path.exists(TMP) else None
 		return FileNotFoundError("Text could not be converted to speech.")
 	
-text_to_speech("Run faster you fat piece of shit")
