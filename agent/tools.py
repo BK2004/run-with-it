@@ -6,12 +6,12 @@ from agent.strava_api import create_strava_post
 date = datetime.now().isoformat()
 
 data = {
-    "name": "Running",
+    "name": "11/9",
     "type": "Run",
     "start_date_local": date,
-    "elapsed_time": 10,
+    "elapsed_time": 3600,
     "private": True,
-    "description": "Created from script",
+    "description": "Something light",
     "distance": 100000,
 }
 
